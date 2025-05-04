@@ -46,13 +46,13 @@ class HabitEntrySerializer(serializers.ModelSerializer):
             "id",
             "user",
             "habit",
-            "habit_nameentry_date",
+            "entry_date",
             "value",
             "notes",
             "created_at",
             "updated_at",
         ]
-        read_only_fields = ["user", "created_at", "updated_at", "habit_name"]
+        read_only_fields = ["user", "created_at", "updated_at"]
 
     def validate(self, attrs):
         habit = attrs.get("habit", getattr(self.instance, "habit", None))
