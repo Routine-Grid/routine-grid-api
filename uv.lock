@@ -61,6 +61,15 @@ wheels = [
 ]
 
 [[package]]
+name = "django-rest-passwordreset"
+version = "1.5.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/9c/b0/a7c04477b473959a353c5ecd27cd022501be7a764fd88076e2477f64618c/django-rest-passwordreset-1.5.0.tar.gz", hash = "sha256:6da38dd00e0cdb1ed5c403e66beeb90f10f8a1a73ebc13fdd27f2b5d67d14181", size = 209031, upload-time = "2024-11-05T13:55:52.451Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ea/d1/0e7b96115f1263f33b1558edc9a7cae3f0f7e920b56997078f438f7e1d44/django_rest_passwordreset-1.5.0-py3-none-any.whl", hash = "sha256:862fce99b12198aa1473299aac68febe4f40760a39beabc47f941cff5c9e7280", size = 31265, upload-time = "2024-11-05T13:55:50.893Z" },
+]
+
+[[package]]
 name = "djangorestframework"
 version = "3.16.0"
 source = { registry = "https://pypi.org/simple" }
@@ -230,6 +239,7 @@ dependencies = [
     { name = "dj-database-url" },
     { name = "django" },
     { name = "django-cors-headers" },
+    { name = "django-rest-passwordreset" },
     { name = "djangorestframework" },
     { name = "djangorestframework-simplejwt" },
     { name = "drf-spectacular" },
@@ -242,6 +252,7 @@ requires-dist = [
     { name = "dj-database-url", specifier = ">=2.3.0" },
     { name = "django", specifier = ">=5.2" },
     { name = "django-cors-headers", specifier = ">=4.7.0" },
+    { name = "django-rest-passwordreset", specifier = ">=1.5.0" },
     { name = "djangorestframework", specifier = ">=3.16.0" },
     { name = "djangorestframework-simplejwt", specifier = ">=5.5.0" },
     { name = "drf-spectacular", specifier = ">=0.28.0" },
