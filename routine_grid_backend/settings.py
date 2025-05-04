@@ -30,7 +30,7 @@ load_dotenv(BASE_DIR / ".env")
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-fallback-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "False") == "true"
+DEBUG = os.getenv("DEBUG")
 
 ALLOWED_HOSTS = []
 
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "apps.habits.apps.HabitsConfig",
     "apps.users.apps.UsersConfig",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -137,6 +138,7 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 SIMPLE_JWT = {
