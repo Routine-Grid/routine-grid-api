@@ -38,7 +38,8 @@ class HabitSerializer(serializers.ModelSerializer):
 
 class HabitEntrySerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
-    habit = serializers.CharField(source="habit.name", read_only=True)
+    habit = serializers.PrimaryKeyRelatedField(queryset=Habit.objects.all())
+    habit_name = serializers.CharField(source="habit.name", read_only=True)
 
     class Meta:
         model = HabitEntry
@@ -46,34 +47,42 @@ class HabitEntrySerializer(serializers.ModelSerializer):
             "id",
             "user",
             "habit",
+            "habit_name",
             "entry_date",
             "value",
             "notes",
             "created_at",
             "updated_at",
         ]
-        read_only_fields = ["user", "created_at", "updated_at"]
+        read_only_fields = ["user", "created_at", "updated_at", "habit_name"]
 
-    def validate(self, attrs):
-        habit = attrs.get("habit", getattr(self.instance, "habit", None))
-        value = attrs.get("value", getattr(self.instance, "value", None))
-
-        if habit and value is not None:
-            if habit.type == Habit.HabitType.SINGULAR and value != 1:
-                raise serializers.ValidationError(
-                    "Singular habits can only have a value of 1."
-                )
-            if habit.type == Habit.HabitType.TIMED and value <= 0:
-                raise serializers.ValidationError(
-                    "Timed habits must have a positive value."
-                )
+    def validate_habit(self, habit_instance):
         request_user = self.context["request"].user
-        if habit and habit.user != request_user:
+        if habit_instance.user != request_user:
             raise serializers.ValidationError(
-                "You do not have permission to modify this habit entry."
+                "You can only create entries for your own habits."
             )
+        if habit_instance.archived_at is not None:
+            raise serializers.ValidationError(
+                "Cannot create entries for archived habits."
+            )
+        return habit_instance
 
-        return attrs
+    def validate(self, data):  # type: ignore
+        habit_instance = data.get("habit")
+        value = data.get("value")
+
+        if habit_instance and value is not None:
+            if habit_instance.type == Habit.HabitType.SINGULAR and value != 1:
+                raise serializers.ValidationError(
+                    "Value for singular habits must be 1."
+                )
+            elif habit_instance.type == Habit.HabitType.TIMED and value <= 0:
+                raise serializers.ValidationError(
+                    "Value for timed habits must be greater than 0."
+                )
+
+        return data
 
     def create(self, validated_data):
         validated_data["user"] = self.context["request"].user
