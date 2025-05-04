@@ -1,4 +1,3 @@
-from django.db.models import Q
 from django.utils import timezone
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
