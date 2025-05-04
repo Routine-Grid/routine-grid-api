@@ -68,21 +68,26 @@ class HabitEntrySerializer(serializers.ModelSerializer):
             )
         return habit_instance
 
-    def validate(self, data):  # type: ignore
-        habit_instance = data.get("habit")
-        value = data.get("value")
+    def validate(self, attrs):
+        habit = attrs.get("habit", getattr(self.instance, "habit", None))
+        value = attrs.get("value", getattr(self.instance, "value", None))
 
-        if habit_instance and value is not None:
-            if habit_instance.type == Habit.HabitType.SINGULAR and value != 1:
+        if habit and value is not None:
+            if habit.type == Habit.HabitType.SINGULAR and value != 1:
                 raise serializers.ValidationError(
-                    "Value for singular habits must be 1."
+                    "Singular habits can only have a value of 1."
                 )
-            elif habit_instance.type == Habit.HabitType.TIMED and value <= 0:
+            # Use elif for clarity/safety
+            elif habit.type == Habit.HabitType.TIMED and value <= 0:
                 raise serializers.ValidationError(
-                    "Value for timed habits must be greater than 0."
+                    "Timed habits must have a positive value."
                 )
+            else:
+                pass
+        else:
+            pass
 
-        return data
+        return attrs
 
     def create(self, validated_data):
         validated_data["user"] = self.context["request"].user

@@ -20,19 +20,25 @@ class HabitViewSet(viewsets.ModelViewSet):
         user = self.request.user
         queryset = Habit.objects.filter(user=user)
 
-        is_archived_param = self.request.query_params.get("is_archived")  # type: ignore
-        if is_archived_param is not None:
-            if is_archived_param.lower() in ["true", "1"]:
-                queryset = queryset.filter(archived_at__isnull=False)
-            elif is_archived_param.lower() in ["false", "0"]:
+        if self.action == "list":
+            is_archived_param = self.request.query_params.get("archived")  # type: ignore
+            if is_archived_param is not None:
+                if is_archived_param.lower() in ["true", "1"]:
+                    queryset = queryset.filter(archived_at__isnull=False)
+                elif is_archived_param.lower() in ["false", "0"]:
+                    queryset = queryset.filter(archived_at__isnull=True)
+            else:
                 queryset = queryset.filter(archived_at__isnull=True)
-        else:
-            queryset = queryset.filter(archived_at__isnull=True)
 
         return queryset.order_by("name")
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    def perform_destroy(self, instance):
+        if instance.archived_at is None:
+            instance.archived_at = timezone.now()
+            instance.save()
 
     @action(detail=True, methods=["post"])
     def archive(self, request, pk=None):
@@ -85,6 +91,7 @@ class HabitEntryViewSet(viewsets.ModelViewSet):
             from rest_framework.exceptions import PermissionDenied
 
             raise PermissionDenied("You do not have permission to create this entry.")
+        serializer.save()
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
