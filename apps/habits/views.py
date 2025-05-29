@@ -96,9 +96,9 @@ class HabitViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         """
-        Archive a specific Habit by its ID (Soft Delete).
+        Delete a specific Habit by its ID.
 
-        Sets the 'archived_at' timestamp instead of deleting the record.
+        This performs a hard delete (removes the record from the database).
         Returns a 204 No Content response on success.
         Returns 404 if the habit does not exist or does not belong to the user.
         """
