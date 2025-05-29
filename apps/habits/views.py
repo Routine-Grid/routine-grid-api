@@ -44,9 +44,7 @@ class HabitViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
     def perform_destroy(self, instance):
-        if instance.archived_at is None:
-            instance.archived_at = timezone.now()
-            instance.save()
+        instance.delete()
 
     def list(self, request, *args, **kwargs):
         """
