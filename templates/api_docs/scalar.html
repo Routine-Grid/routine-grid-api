@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ title|default:"Routine Grid API Documentation" }}</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <script
+      id="api-reference"
+      data-url="{{ schema_url }}"
+      data-configuration='{
+            "theme": "purple",
+            "layout": "modern",
+            "showSidebar": true,
+            "hideDownloadButton": false,
+            "searchHotKey": "k",
+            "darkMode": true,
+            "customCss": ".scalar-app { font-family: Inter, sans-serif; }",
+            "metaData": {
+                "title": "Routine Grid API",
+                "description": "API for tracking singular and timed habits",
+                "logo": "https://your-domain.com/logo.png"
+            }
+        }'
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
+  </body>
+</html>

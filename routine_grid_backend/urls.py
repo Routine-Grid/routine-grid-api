@@ -25,6 +25,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from apps.users.views import RegisterView
 
+from .views import ScalarDocumentationView
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/v1/", include("apps.habits.urls")),
@@ -37,5 +39,12 @@ urlpatterns = [
     ),
     path("api/v1/users/", include("apps.users.urls")),
     path("api/schema.yaml", SpectacularAPIView.as_view(), name="schema"),
-    path("", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
+    path(
+        "swagger/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"
+    ),
+    path(
+        "",
+        ScalarDocumentationView.as_view(),
+        name="scalar_documentation",
+    ),
 ]
