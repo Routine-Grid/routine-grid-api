@@ -149,7 +149,7 @@ USE_TZ = True
 SPECTACULAR_SETTINGS = {
     "TITLE": "Routine Grid API",
     "DESCRIPTION": "API for tracking singular and timed habits for the Routine Grid app (coming soon).",
-    "VERSION": "1.0.0",
+    "VERSION": "1.1.0",
     "SERVE_INCLUDE_SCHEMA": True,
     "CONTACT": {"name": "Heet Patel", "email": "heetkpatel30@gmail.com"},
     "LICENSE": {"name": "MIT License"},

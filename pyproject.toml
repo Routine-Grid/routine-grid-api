@@ -1,7 +1,7 @@
 [project]
 name = "routine-grid"
-version = "0.1.0"
-description = "Add your description here"
+version = "1.1.0"
+description = "API for tracking singular and timed habits for the Routine Grid app (coming soon)."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [

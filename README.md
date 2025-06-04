@@ -29,7 +29,7 @@ Routine Grid helps users build consistent routines by tracking daily habits. The
   - Filter entries by date range and habits
 
 - **API Documentation**
-  - Interactive API documentation with Swagger UI
+  - Interactive API documentation with Scalar
 
 ## Technology Stack
 
@@ -110,6 +110,7 @@ The following environment variables can be configured in the `.env` file:
 
 - `GET /api/v1/users/me/`: Get current user profile
 - `PUT/PATCH /api/v1/users/me/`: Update user profile
+- `DELETE /api/v1/users/me/`: Delete user account
 
 ### Habits
 
@@ -118,8 +119,8 @@ The following environment variables can be configured in the `.env` file:
 - `GET /api/v1/habits/{id}/`: Get a specific habit
 - `PUT /api/v1/habits/{id}/`: Update a habit (full)
 - `PATCH /api/v1/habits/{id}/`: Update a habit (partial)
-- `DELETE /api/v1/habits/{id}/`: Archive a habit (soft delete)
-- `POST /api/v1/habits/{id}/archive/`: Archive a habit
+- `DELETE /api/v1/habits/{id}/`: Delete a habit (hard delete)
+- `POST /api/v1/habits/{id}/archive/`: Archive a habit (soft delete)
 - `POST /api/v1/habits/{id}/unarchive/`: Unarchive a habit
 
 ### Habit Entries
@@ -133,7 +134,7 @@ The following environment variables can be configured in the `.env` file:
 ### API Documentation
 
 - `/api/schema.yaml`: OpenAPI schema
-- `/`: Swagger UI documentation
+- `/`: Scalar API documentation
 
 ## Testing
 
