@@ -5,6 +5,17 @@
     <title>Routine Grid API Documentation</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {% load static %}
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{% static 'images/routinegridlogo.ico' %}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{% static 'images/routinegridlogo.png' %}"
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
@@ -68,6 +79,10 @@
             "searchHotKey": "k",
             "darkMode": true,
             "customCss": ".scalar-app { font-family: Inter, sans-serif; }",
+            "authentication": {
+                "type": "bearer",
+                "bearerToken": "{{ token }}"
+            },
             "servers": {{ servers|safe }}
         }'
     ></script>
