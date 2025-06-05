@@ -1,4 +1,6 @@
 from django.utils import timezone
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -12,6 +14,47 @@ class IsOwner(permissions.BasePermission):
         return obj.user == request.user
 
 
+@extend_schema_view(
+    list=extend_schema(
+        tags=["Habits"],
+        summary="List user's habits",
+        description="Get all habits for the authenticated user. Use ?archived=true/false to filter.",
+        parameters=[
+            OpenApiParameter(
+                name="archived",
+                type=OpenApiTypes.BOOL,
+                location=OpenApiParameter.QUERY,
+                description="Filter by archived status",
+                required=False,
+            ),
+        ],
+    ),
+    create=extend_schema(
+        tags=["Habits"],
+        summary="Create a new habit",
+        description="Create a new habit for the authenticated user.",
+    ),
+    retrieve=extend_schema(
+        tags=["Habits"],
+        summary="Get habit details",
+        description="Retrieve details of a specific habit.",
+    ),
+    update=extend_schema(
+        tags=["Habits"],
+        summary="Update habit",
+        description="Update all fields of a habit (PUT).",
+    ),
+    partial_update=extend_schema(
+        tags=["Habits"],
+        summary="Partially update habit",
+        description="Update specific fields of a habit (PATCH).",
+    ),
+    destroy=extend_schema(
+        tags=["Habits"],
+        summary="Delete habit",
+        description="Permanently delete a habit (hard delete).",
+    ),
+)
 class HabitViewSet(viewsets.ModelViewSet):
     """
     API endpoint for managing Habits.
@@ -104,6 +147,12 @@ class HabitViewSet(viewsets.ModelViewSet):
         """
         return super().destroy(request, *args, **kwargs)
 
+    @extend_schema(
+        tags=["Habits"],
+        summary="Archive a habit",
+        description="Archive a habit (soft delete). Sets archived_at timestamp.",
+        request=None,
+    )
     @action(detail=True, methods=["post"])
     def archive(self, request, pk=None):
         """
@@ -120,6 +169,12 @@ class HabitViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(habit)
         return Response(serializer.data)
 
+    @extend_schema(
+        tags=["Habits"],
+        summary="Unarchive a habit",
+        description="Reactivate an archived habit. Clears archived_at timestamp.",
+        request=None,
+    )
     @action(detail=True, methods=["post"])
     def unarchive(self, request, pk=None):
         """
@@ -137,6 +192,68 @@ class HabitViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
+@extend_schema_view(
+    list=extend_schema(
+        tags=["Entries"],
+        summary="List habit entries",
+        description="Get habit entries for the authenticated user with optional filtering.",
+        parameters=[
+            OpenApiParameter(
+                name="habit_id",
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+                description="Filter by specific habit ID",
+                required=False,
+            ),
+            OpenApiParameter(
+                name="start_date",
+                type=OpenApiTypes.DATE,
+                location=OpenApiParameter.QUERY,
+                description="Filter entries from this date (YYYY-MM-DD)",
+                required=False,
+            ),
+            OpenApiParameter(
+                name="end_date",
+                type=OpenApiTypes.DATE,
+                location=OpenApiParameter.QUERY,
+                description="Filter entries until this date (YYYY-MM-DD)",
+                required=False,
+            ),
+            OpenApiParameter(
+                name="date",
+                type=OpenApiTypes.DATE,
+                location=OpenApiParameter.QUERY,
+                description="Filter entries for specific date (YYYY-MM-DD)",
+                required=False,
+            ),
+        ],
+    ),
+    create=extend_schema(
+        tags=["Entries"],
+        summary="Create habit entry",
+        description="Log a habit completion for a specific date.",
+    ),
+    retrieve=extend_schema(
+        tags=["Entries"],
+        summary="Get entry details",
+        description="Retrieve details of a specific habit entry.",
+    ),
+    update=extend_schema(
+        tags=["Entries"],
+        summary="Update entry",
+        description="Update all fields of a habit entry (PUT).",
+    ),
+    partial_update=extend_schema(
+        tags=["Entries"],
+        summary="Partially update entry",
+        description="Update specific fields of a habit entry (PATCH).",
+    ),
+    destroy=extend_schema(
+        tags=["Entries"],
+        summary="Delete entry",
+        description="Permanently delete a habit entry.",
+    ),
+)
 class HabitEntryViewSet(viewsets.ModelViewSet):
     """
     API endpoint for managing Habit Entries (logs of habit completion).

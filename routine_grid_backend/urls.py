@@ -1,50 +1,67 @@
-"""
-URL configuration for routine_grid_backend project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-
 from django.contrib import admin
 from django.urls import include, path
-from drf_spectacular.views import (
-    SpectacularAPIView,
-    SpectacularSwaggerView,
-)
+from drf_spectacular.utils import extend_schema
+from drf_spectacular.views import SpectacularAPIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from apps.users.views import RegisterView
 
-from .views import ScalarDocumentationView
+from .views import (
+    ScalarDocumentationView,
+    TaggedResetPasswordConfirm,
+    TaggedResetPasswordRequestToken,
+    TaggedResetPasswordValidateToken,
+)
+
+
+class TaggedTokenObtainPairView(TokenObtainPairView):
+    @extend_schema(
+        tags=["Authentication"],
+        summary="Login",
+        description="Obtain access and refresh JWT tokens using username and password.",
+    )
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+
+class TaggedTokenRefreshView(TokenRefreshView):
+    @extend_schema(
+        tags=["Authentication"],
+        summary="Refresh token",
+        description="Obtain a new access token using a valid refresh token.",
+    )
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/v1/", include("apps.habits.urls")),
-    path("api/v1/auth/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("api/v1/auth/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path(
+        "api/v1/auth/login/",
+        TaggedTokenObtainPairView.as_view(),
+        name="token_obtain_pair",
+    ),
+    path(
+        "api/v1/auth/refresh/", TaggedTokenRefreshView.as_view(), name="token_refresh"
+    ),
     path("api/v1/auth/register/", RegisterView.as_view(), name="auth_register"),
     path(
         "api/v1/auth/password_reset/",
-        include("django_rest_passwordreset.urls", namespace="password_reset"),
+        TaggedResetPasswordRequestToken.as_view(),
+        name="reset_password_request",
+    ),
+    path(
+        "api/v1/auth/password_reset/confirm/",
+        TaggedResetPasswordConfirm.as_view(),
+        name="reset_password_confirm",
+    ),
+    path(
+        "api/v1/auth/password_reset/validate_token/",
+        TaggedResetPasswordValidateToken.as_view(),
+        name="reset_password_validate",
     ),
     path("api/v1/users/", include("apps.users.urls")),
     path("api/schema.yaml", SpectacularAPIView.as_view(), name="schema"),
-    path(
-        "swagger/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"
-    ),
-    path(
-        "",
-        ScalarDocumentationView.as_view(),
-        name="scalar_documentation",
-    ),
+    path("", ScalarDocumentationView.as_view(), name="scalar-docs"),
 ]

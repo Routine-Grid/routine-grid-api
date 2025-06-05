@@ -1,17 +1,62 @@
+<!-- templates/api_docs/scalar_advanced.html -->
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{{ title|default:"Routine Grid API Documentation" }}</title>
+    <title>Routine Grid API Documentation</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-      body {
-        margin: 0;
-        padding: 0;
+      :root {
+        --scalar-custom-header-height: 50px;
+      }
+      .custom-header {
+        height: var(--scalar-custom-header-height);
+        background-color: var(--scalar-background-1);
+        box-shadow: inset 0 -1px 0 var(--scalar-border-color);
+        color: var(--scalar-color-1);
+        font-size: var(--scalar-font-size-2);
+        padding: 0 18px;
+        position: sticky;
+        justify-content: space-between;
+        top: 0;
+        z-index: 100;
+      }
+      .custom-header,
+      .custom-header nav {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+      .custom-header a:hover {
+        color: var(--scalar-color-2);
+      }
+      .routine-grid-logo {
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        color: var(--scalar-color-1);
       }
     </style>
   </head>
   <body>
+    <header class="custom-header scalar-app">
+      <div class="routine-grid-logo">
+        <img
+          src="{% load static %}{% static 'images/routinegridlogo.png' %}"
+          alt="Routine Grid Logo"
+          style="height: 40px; width: auto; margin-right: 10px"
+        />
+        <span>Routine Grid API Documentation</span>
+      </div>
+      <nav>
+        <a href="https://github.com/patelheet30">Github</a>
+      </nav>
+    </header>
+
     <script
       id="api-reference"
       data-url="{{ schema_url }}"
@@ -23,11 +68,7 @@
             "searchHotKey": "k",
             "darkMode": true,
             "customCss": ".scalar-app { font-family: Inter, sans-serif; }",
-            "metaData": {
-                "title": "Routine Grid API",
-                "description": "API for tracking singular and timed habits",
-                "logo": "https://your-domain.com/logo.png"
-            }
+            "servers": {{ servers|safe }}
         }'
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>

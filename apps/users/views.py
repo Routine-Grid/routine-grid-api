@@ -1,6 +1,7 @@
 # apps/users/views.py
 
 from django.contrib.auth import get_user_model
+from drf_spectacular.utils import extend_schema
 
 # Import RetrieveUpdateDestroyAPIView
 from rest_framework import generics, permissions
@@ -10,15 +11,23 @@ from .serializers import RegisterSerializer, UserSerializer
 User = get_user_model()
 
 
-# Keep RegisterView as is
+@extend_schema(
+    tags=["Authentication"],
+    summary="Register new user",
+    description="Create a new user account with username, email, and password.",
+)
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (permissions.AllowAny,)
     serializer_class = RegisterSerializer
 
 
-# Modify UserProfileView
-class UserProfileView(generics.RetrieveUpdateDestroyAPIView):  # <-- CHANGE HERE
+@extend_schema(
+    tags=["Users"],
+    summary="User profile management",
+    description="Get, update, or delete the authenticated user's profile.",
+)
+class UserProfileView(generics.RetrieveUpdateDestroyAPIView):
     """
     API endpoint for fetching, updating, and DELETING
     the authenticated user's profile.
@@ -27,15 +36,10 @@ class UserProfileView(generics.RetrieveUpdateDestroyAPIView):  # <-- CHANGE HERE
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]  # Must be logged in
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
         """
         Returns the authenticated user making the request.
         """
         return self.request.user
-
-    # No need to explicitly define a destroy method if the default behavior
-    # (calling self.get_object().delete()) is what you want.
-    # The get_object() method already returns request.user, so a DELETE
-    # request to this view will call request.user.delete().
