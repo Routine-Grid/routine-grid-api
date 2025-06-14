@@ -227,4 +227,4 @@ DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG = {
 }
 
 DJANGO_REST_PASSWORDRESET_TEMPLATE_NAME = "email/password_reset_token.html"
-frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
