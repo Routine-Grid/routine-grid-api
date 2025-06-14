@@ -41,7 +41,7 @@ CORS_ALLOW_CREDENTIALS = True
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-fallback-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG")
+DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "yes")
 
 allowed_hosts_env = os.getenv("ALLOWED_HOSTS")
 if allowed_hosts_env:
@@ -105,11 +105,10 @@ WSGI_APPLICATION = "routine_grid_backend.wsgi.application"
 
 EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
-if not DEBUG:
-    ANYMAIL = {
-        "MAILGUN_API_KEY": os.getenv("MAILGUN_API_KEY"),
-        "MAILGUN_SENDER_DOMAIN": os.getenv("MAILGUN_SENDER_DOMAIN"),
-    }
+ANYMAIL = {
+    "MAILGUN_API_KEY": os.getenv("MAILGUN_API_KEY"),
+    "MAILGUN_SENDER_DOMAIN": os.getenv("MAILGUN_SENDER_DOMAIN"),
+}
 
 # Default email settings (used if not using Anymail)
 
