@@ -101,7 +101,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "routine_grid_backend.wsgi.application"
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "noreply@routinegrid.com")
 
 
 # Database
@@ -213,3 +220,11 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 }
+
+DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG = {
+    "CLASS": "django_rest_passwordreset.tokens.RandomStringTokenGenerator",
+    "OPTIONS": {"min_length": 20, "max_length": 30},
+}
+
+DJANGO_REST_PASSWORDRESET_TEMPLATE_NAME = "email/password_reset_token.html"
+frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
