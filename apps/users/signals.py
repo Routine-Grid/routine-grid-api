@@ -1,6 +1,9 @@
 # apps/users/signals.py
 
+from email.mime.image import MIMEImage
+
 from django.conf import settings
+from django.contrib.staticfiles import finders
 from django.dispatch import receiver
 from django_rest_passwordreset.signals import reset_password_token_created
 
@@ -52,6 +55,16 @@ def password_reset_token_created(
 
     # Attach HTML version
     msg.attach_alternative(email_html_message, "text/html")
+
+    logo_path = finders.find("images/routinegridlogo.png")
+
+    if logo_path:
+        with open(logo_path, "rb") as logo_file:  # type: ignore
+            logo = MIMEImage(logo_file.read())
+
+        logo.add_header("Content-ID", "<routinegridlogo>")
+
+        msg.attach(logo)  # type: ignore
 
     # Send the email
     msg.send()
